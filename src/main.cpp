@@ -6,8 +6,9 @@
 #include <glm/glm.hpp>
 #include <iostream>
 
-#include "utils.h"
+#include "../include/utils.h"
 
+using utils::get_w_h;
 using utils::framebuffer_size_callback;
 using utils::processInput;
 
@@ -20,8 +21,15 @@ int main() {
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 #endif
 
+    auto [width, height, errmsg] = get_w_h(13);
+    if (errmsg != "") {
+        std::cerr << errmsg << '\n';
+        return 1;
+    }
+    std::cout << "Using resolution: " << width << "x" << height << '\n';
+
     GLFWwindow* window =
-        glfwCreateWindow(800, 600, "OpenGL Starter", nullptr, nullptr);
+        glfwCreateWindow(width, height, "OpenGL Starter", nullptr, nullptr);
 
     if (!window) {
         std::cout << "Failed to create GLFW window" << std::endl;
@@ -36,7 +44,7 @@ int main() {
         return -1;
     }
 
-    glViewport(0, 0, 800, 600);
+    glViewport(0, 0, width, height);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
     while (!glfwWindowShouldClose(window)) {
