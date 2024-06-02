@@ -1,0 +1,23 @@
+name: Docker Image CI
+on:
+  push:
+    branches: [main]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install required packages
+        run: |
+          sudo apt-get update
+          sudo apt-get upgrade -y
+          sudo apt-get install -y libxrandr-dev libxinerama-dev libx11-dev libxcursor-dev libxi-dev libxext-dev libegl1-mesa-dev mesa-utils
+      - name: Setup cmake
+        uses: jwlawson/actions-setup-cmake@v2
+        with:
+          cmake-version: '3.22.x'
+      - name: Checkout source
+        uses: actions/checkout@v4
+      - name: Build app
+        run: |
+          cmake -B build -D USE_ASSIMP=YES
+          cmake --build build
